@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+    --color-dark-primary: #222831;
+    --color-dark-secondary: #30475E;
+    --color-dark-accent: #F05454;
+    --color-dark-text: #EEEEEE;
+}
+
+@theme {
+    --spacing-primary: 5vw
+}
