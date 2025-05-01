@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ const RegisterPage = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState('');
+    const navigate = useNavigate()
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -43,13 +45,14 @@ const RegisterPage = () => {
         try {
             setLoading(true);
             setError('');
-            const response = await axios.post('https://your-backend-url.com/api/register', {
+            const response = await axios.post('http://localhost:3000/api/register', {
                 name,
                 email,
                 password,
             });
 
             setSuccess('Registration successful!');
+            navigate('/', { state: { loggedIn: true } })
             setFormData({ name: '', email: '', password: '' });
         } catch (err) {
             setError(err.response?.data?.message || 'Registration failed.');

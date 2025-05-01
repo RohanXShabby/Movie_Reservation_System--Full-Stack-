@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { initialController ,signupController } from "../Controllers/user.controller.js";
+import { initialController, registerController } from "../Controllers/user.controller.js";
 
 
 
@@ -8,5 +8,5 @@ export const router = Router()
 
 router.get('/', initialController)
 
-router.post('/signup' , signupController)
+router.post('/register', registerController)
 

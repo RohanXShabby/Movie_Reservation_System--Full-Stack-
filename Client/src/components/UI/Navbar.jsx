@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
 import { FaUserCircle } from "react-icons/fa";
 
 
@@ -12,6 +12,14 @@ const Navbar = () => {
         { path: "tickets", name: 'Tickets' },
     ]
     const [userLoggedIn, setUserLoggedIn] = useState(false)
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.state?.loggedIn) {
+            setUserLoggedIn(true);
+            navigate(location.pathname, { replace: true, state: {} });
+        }
+    }, [location.state]);
 
 
     return (

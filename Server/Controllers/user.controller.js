@@ -9,7 +9,7 @@ export const initialController = async (request, response) => {
 }
 
 
-export const signupController = async (request, response) => {
+export const registerController = async (request, response) => {
     try {
         const { name, email, password } = request.body
         if (!name || !email || !password) {
@@ -22,6 +22,8 @@ export const signupController = async (request, response) => {
             email: lowerCaseEmail,
             password: hashedPassword,
         })
+
+        userDetail.save()
 
         const subject = 'Sign Up Confermation'
         const content = `
