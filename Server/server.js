@@ -26,4 +26,9 @@ server.use(express.json());
 
 server.use('/api', router)
 
-
+server.use((error, request, response, next) => {
+    response
+        .status(error.statusCode || 500)
+        .json({ message: error.message || 'Internal Server Error' })
+    next()
+})
