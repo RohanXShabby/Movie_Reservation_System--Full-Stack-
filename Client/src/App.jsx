@@ -7,6 +7,8 @@ import MoviesPage from './pages/MoviesPage.jsx'
 import TicketPage from './pages/TicketPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
+import CheckYourEmail from './components/UI/CheckYourEmail.jsx'
+import VerifiedSuccess from './components/UI/VerifiedSuccess.jsx'
 
 function App() {
 
@@ -23,6 +25,8 @@ function App() {
       { path: "/tickets", element: <TicketPage /> }
     ]
   },
+  { path: "/checkmail", element: <CheckYourEmail /> },
+  { path: "/verifiedstatus", element: <VerifiedSuccess /> },
   { path: "/login", element: <LoginPage /> },
   { path: "/register", element: <RegisterPage /> },])
 

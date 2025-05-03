@@ -52,10 +52,17 @@ const RegisterPage = () => {
             });
 
             setSuccess('Registration successful!');
-            navigate('/', { state: { loggedIn: true } })
+            navigate('/checkmail')
             setFormData({ name: '', email: '', password: '' });
         } catch (err) {
-            setError(err.response?.data?.message || 'Registration failed.');
+            console.log(err)
+            const errorMsg = err.response?.data?.message;
+            if (errorMsg.includes("duplicate key")) {
+                return setError('Email already exist!. \n Try again with different Email or log in to exixting account');
+            }
+            setError(errorMsg || 'Registration failed.');
+
+
         } finally {
             setLoading(false);
         }
@@ -76,7 +83,7 @@ const RegisterPage = () => {
                             value={formData.name}
                             onChange={handleChange}
                             placeholder="Enter your name"
-                            className="w-full px-4 py-2 rounded-lg bg-dark-primary text-dark-text border border-[#F05454] focus:outline-none focus:ring-2 focus:ring-[#F05454]"
+                            className="w-full px-4 py-2 rounded-lg bg-dark-primary text-dark-text border border-dark-accent focus:outline-none focus:ring-2 focus:ring-[#F05454]"
                         />
                     </div>
 
@@ -89,7 +96,7 @@ const RegisterPage = () => {
                             value={formData.email}
                             onChange={handleChange}
                             placeholder="Enter your email"
-                            className="w-full px-4 py-2 rounded-lg bg-dark-primary text-dark-text border border-[#F05454] focus:outline-none focus:ring-2 focus:ring-[#F05454]"
+                            className="w-full px-4 py-2 rounded-lg bg-dark-primary text-dark-text border border-dark-accent focus:outline-none focus:ring-2 focus:ring-[#F05454]"
                         />
                     </div>
 
@@ -102,19 +109,19 @@ const RegisterPage = () => {
                             value={formData.password}
                             onChange={handleChange}
                             placeholder="Enter your password"
-                            className="w-full px-4 py-2 rounded-lg bg-dark-primary text-dark-text border border-[#F05454] focus:outline-none focus:ring-2 focus:ring-[#F05454]"
+                            className="w-full px-4 py-2 rounded-lg bg-dark-primary text-dark-text border border-dark-accent focus:outline-none focus:ring-2 focus:ring-[#F05454]"
                         />
                     </div>
 
                     {/* Error or Success */}
-                    {error && <p className="text-sm text-red-500">{error}</p>}
+                    {error && <p className="text-sm whitespace-pre-line text-red-500">{error}</p>}
                     {success && <p className="text-sm text-green-400">{success}</p>}
 
                     {/* Submit */}
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-[#F05454] text-dark-text font-semibold py-2 rounded-lg hover:bg-[#d94343] transition duration-300 disabled:opacity-50"
+                        className="w-full bg-dark-accent cursor-pointer text-dark-text font-semibold py-2 rounded-lg hover:bg-dark-accent/80 transition duration-300 disabled:opacity-50"
                     >
                         {loading ? 'Registering...' : 'Register'}
                     </button>
