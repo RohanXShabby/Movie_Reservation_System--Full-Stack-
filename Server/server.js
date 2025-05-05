@@ -8,8 +8,12 @@ env.config()
 
 const server = express();
 const PORT = process.env.PORT || 3001;
-
-server.use(cors())
+server.use(cors({
+    origin: 'http://localhost:5173', // Replace with your frontend's URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true // Allow cookies if needed
+}))
 server.use(express.json());
 
 (async () => {

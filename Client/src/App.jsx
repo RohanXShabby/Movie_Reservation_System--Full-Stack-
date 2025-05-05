@@ -9,6 +9,9 @@ import LoginPage from './pages/LoginPage.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
 import CheckYourEmail from './components/UI/CheckYourEmail.jsx'
 import VerifiedSuccess from './components/UI/VerifiedSuccess.jsx'
+import EmailforOTP from './pages/EmailforOTP.jsx'
+import EnterOTP from './pages/EnterOTP.jsx'
+
 
 function App() {
 
@@ -28,7 +31,10 @@ function App() {
   { path: "/checkmail", element: <CheckYourEmail /> },
   { path: "/verifiedstatus", element: <VerifiedSuccess /> },
   { path: "/login", element: <LoginPage /> },
-  { path: "/register", element: <RegisterPage /> },])
+  { path: "/register", element: <RegisterPage /> },
+  { path: "/emailforotp", element: <EmailforOTP /> },
+  { path: "/enterotp", element: <EnterOTP /> },
+  ])
 
   return <RouterProvider router={router} />
 }

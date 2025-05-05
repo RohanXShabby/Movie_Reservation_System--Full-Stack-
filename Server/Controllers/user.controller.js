@@ -3,7 +3,8 @@ import bcrypt from 'bcrypt'
 import emailSender from "../Service/mailer.service.js"
 import customError from "../Utils/errorHandler.js"
 import { emailVerification } from "../Templates/mailTemplates.js"
-import { randomBytes, createHash } from 'crypto';
+import { randomBytes } from 'crypto';
+import { optTemplate } from "../Templates/otpTemplates.js"
 
 export const initialController = async (request, response, next) => {
     response.status(200).send({ 'message': "Server Running" })
@@ -15,7 +16,7 @@ export const registerController = async (request, response, next) => {
     if (!name || !email || !password) {
         throw new customError('All Feilds Required', 400);
     }
-    const token = randomBytes(32).toString('hex');
+    const token = randomBytes(16).toString('hex');
     const hashedPassword = await bcrypt.hash(password, 5)
     const lowerCaseEmail = email.trim().toLowerCase()
     const userDetail = new User({
@@ -41,7 +42,6 @@ export const verifyEmailController = async (request, response) => {
     const { ID, token } = request.params;
     const user = await User.findById(ID);
 
-    console.log(ID, token)
 
     if (!user) {
         throw new customError('User not found', 404);
@@ -54,4 +54,52 @@ export const verifyEmailController = async (request, response) => {
     await user.save();
 
     response.status(200).redirect('http://localhost:5173/verifiedstatus');
+};
+
+export const userLoginController = async (request, response) => {
+    const { email, password } = await request.body
+
+    if (!email, !password) {
+        throw new customError('Please fill all the Feild', 400)
+    }
+
+    const user = await User.findOne({ email })
+
+    if (!user) {
+        throw new customError('User not found', 404)
+    }
+
+    if (!user.isVerified) {
+        throw new customError('Please Verify you Email before login', 400)
+    }
+
+    const passwordMatched = await bcrypt.compare(password, user.password)
+
+    if (!passwordMatched) {
+        throw new customError('Wrong password try again', 400)
+    }
+    response.status(200).json({ message: 'User logged In successfully' })
+}
+
+export const otpController = async (request, response) => {
+    const { email } = request.body;
+    const userDetails = await User.findOne({ email });
+
+    if (!userDetails) {
+        throw new customError('User not found', 404);
+    }
+    const OTP = String(Math.floor(Math.random() * 10000)).padStart(4, '0')
+    userDetails.otp = OTP
+
+    await userDetails.save();
+
+    const subject = 'Password Reset OTP'
+    const content = optTemplate(OTP)
+
+    emailSender(email, subject, content)
+
+
+
+
+    response.status(200).json("OTP Sent successfully");
 };

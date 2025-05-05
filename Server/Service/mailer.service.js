@@ -13,7 +13,6 @@ const transporter = nodemailer.createTransport({
 });
 
 const mailSender = async (email, subject, content) => {
-    // send mail with defined transport object
     const info = await transporter.sendMail({
         from: "Rohan Bisht " + process.env.MAIL_USER,
         to: email, // list of receivers

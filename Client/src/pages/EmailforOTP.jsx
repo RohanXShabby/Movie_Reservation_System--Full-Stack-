@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const LoginPage = () => {
+const EmailforOTP = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -17,12 +18,14 @@ const LoginPage = () => {
         setSuccess('');
     };
 
+    const navigate = useNavigate()
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { email, password } = formData;
+        const { email } = formData;
 
-        if (!email || !password) {
-            setError('Please fill in all fields.');
+        if (!email) {
+            setError('Please Enter Your Email');
             return;
         }
 
@@ -30,24 +33,24 @@ const LoginPage = () => {
             setLoading(true);
             setError('');
 
-            const res = await axios.post('https://your-backend-url.com/api/login', {
-                email,
-                password,
+            const res = await axios.post('http://localhost:3000/api/otp', {
+                email
             });
 
-            setSuccess('Login successful!');
+            setSuccess('OTP Sent Successfully');
             // Optional: Save token to localStorage, redirect, etc.
         } catch (err) {
-            setError(err.response?.data?.message || 'Login failed. Check credentials.');
+            setError(err.response?.data?.message || "Can't Send OTP.Check Email.");
         } finally {
             setLoading(false);
+            navigate('/enterotp')
         }
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-dark-primary text-dark-text px-4 py-10">
             <div className="w-full max-w-md bg-dark-secondary rounded-xl shadow-lg p-8">
-                <h2 className="text-2xl font-bold  mb-6 text-center">Login to <span className='text-dark-accent'> MovieSquare</span></h2>
+                <h2 className="text-2xl font-bold  mb-6 text-center"><span className='text-dark-accent'> Email</span> Verification</h2>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Email */}
@@ -63,21 +66,7 @@ const LoginPage = () => {
                         />
                     </div>
 
-                    {/* Password */}
-                    <div>
-                        <label className="block text-dark-text mb-1">Password</label>
-                        <input
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            placeholder="Enter your password"
-                            className="w-full px-4 py-2 rounded-lg bg-dark-primary text-dark-text border border-dark-accent focus:outline-none focus:ring-2 focus:ring-dark-accent"
-                        />
-                    </div>
-
                     {/* Error/Success */}
-                    <Link>Forget Password?</Link>
                     {error && <p className="text-sm text-red-500">{error}</p>}
                     {success && <p className="text-sm text-green-400">{success}</p>}
 
@@ -87,7 +76,7 @@ const LoginPage = () => {
                         disabled={loading}
                         className="w-full bg-[#F05454] text-dark-text font-semibold py-2 rounded-lg hover:bg-[#d94343] transition duration-300 disabled:opacity-50"
                     >
-                        {loading ? 'Logging in...' : 'Login'}
+                        {loading ? 'Sending OTP...' : 'Send OTP'}
                     </button>
                 </form>
             </div>
@@ -95,4 +84,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default EmailforOTP;
