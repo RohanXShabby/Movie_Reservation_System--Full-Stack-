@@ -1,42 +1,42 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import HomeLayout from './components/layout/HomeLayout.jsx'
-import ErrorPage from './pages/ErrorPage.jsx'
-import HomePage from './pages/HomePage.jsx'
-import AccountPage from './pages/AccountPage.jsx'
-import MoviesPage from './pages/MoviesPage.jsx'
-import TicketPage from './pages/TicketPage.jsx'
-import LoginPage from './pages/LoginPage.jsx'
-import RegisterPage from './pages/RegisterPage.jsx'
-import CheckYourEmail from './components/UI/CheckYourEmail.jsx'
-import VerifiedSuccess from './components/UI/VerifiedSuccess.jsx'
-import EmailforOTP from './pages/EmailforOTP.jsx'
-import EnterOTP from './pages/EnterOTP.jsx'
-
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import HomeLayout from "./components/layout/HomeLayout.jsx";
+import ErrorPage from "./pages/ErrorPage.jsx";
+import HomePage from "./pages/HomePage.jsx";
+import AccountPage from "./pages/AccountPage.jsx";
+import MoviesPage from "./pages/MoviesPage.jsx";
+import TicketPage from "./pages/TicketPage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import RegisterPage from "./pages/RegisterPage.jsx";
+import CheckYourEmail from "./components/UI/CheckYourEmail.jsx";
+import VerifiedSuccess from "./components/UI/VerifiedSuccess.jsx";
+import EmailforOTP from "./pages/EmailforOTP.jsx";
+import EnterOTP from "./pages/EnterOTP.jsx";
+import PasswordReset from "./pages/PasswordReset.jsx";
 
 function App() {
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <HomeLayout />,
+      errorElement: <ErrorPage />,
+      children: [
+        { path: "/", element: <HomePage /> },
+        { path: "/account", element: <AccountPage /> },
+        { path: "/movies", element: <MoviesPage /> },
+        { path: "/tickets", element: <TicketPage /> },
+        { path: "/tickets", element: <TicketPage /> },
+      ],
+    },
+    { path: "/checkmail", element: <CheckYourEmail /> },
+    { path: "/verifiedstatus", element: <VerifiedSuccess /> },
+    { path: "/login", element: <LoginPage /> },
+    { path: "/register", element: <RegisterPage /> },
+    { path: "/emailforotp", element: <EmailforOTP /> },
+    { path: "/enterotp", element: <EnterOTP /> },
+    { path: "/password-reset", element: <PasswordReset /> },
+  ]);
 
-
-  const router = createBrowserRouter([{
-    path: '/',
-    element: <HomeLayout />,
-    errorElement: <ErrorPage />,
-    children: [
-      { path: "/", element: <HomePage /> },
-      { path: "/account", element: <AccountPage /> },
-      { path: "/movies", element: <MoviesPage /> },
-      { path: "/tickets", element: <TicketPage /> },
-      { path: "/tickets", element: <TicketPage /> }
-    ]
-  },
-  { path: "/checkmail", element: <CheckYourEmail /> },
-  { path: "/verifiedstatus", element: <VerifiedSuccess /> },
-  { path: "/login", element: <LoginPage /> },
-  { path: "/register", element: <RegisterPage /> },
-  { path: "/emailforotp", element: <EmailforOTP /> },
-  { path: "/enterotp", element: <EnterOTP /> },
-  ])
-
-  return <RouterProvider router={router} />
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;

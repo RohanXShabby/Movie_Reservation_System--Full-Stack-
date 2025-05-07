@@ -1,105 +1,138 @@
-import { User } from "../Models/user.model.js"
-import bcrypt from 'bcrypt'
-import emailSender from "../Service/mailer.service.js"
-import customError from "../Utils/errorHandler.js"
-import { emailVerification } from "../Templates/mailTemplates.js"
-import { randomBytes } from 'crypto';
-import { optTemplate } from "../Templates/otpTemplates.js"
+import { User } from "../Models/user.model.js";
+import bcrypt from "bcrypt";
+import emailSender from "../Service/mailer.service.js";
+import customError from "../Utils/errorHandler.js";
+import { emailVerification } from "../Templates/mailTemplates.js";
+import { randomBytes } from "crypto";
+import { optTemplate } from "../Templates/otpTemplates.js";
+import env from "dotenv";
+
+env.config();
 
 export const initialController = async (request, response, next) => {
-    response.status(200).send({ 'message': "Server Running" })
-}
+    response.status(200).send({ message: "Server Running" });
+};
 
 export const registerController = async (request, response, next) => {
-
-    const { name, email, password } = request.body
+    const { name, email, password } = request.body;
     if (!name || !email || !password) {
-        throw new customError('All Feilds Required', 400);
+        throw new customError("All Feilds Required", 400);
     }
-    const token = randomBytes(16).toString('hex');
-    const hashedPassword = await bcrypt.hash(password, 5)
-    const lowerCaseEmail = email.trim().toLowerCase()
+    const token = randomBytes(16).toString("hex");
+    const hashedPassword = await bcrypt.hash(password, 5);
+    const lowerCaseEmail = email.trim().toLowerCase();
     const userDetail = new User({
         name,
         email: lowerCaseEmail,
         password: hashedPassword,
         emailToken: token,
-    })
+    });
 
-    await userDetail.save()
+    await userDetail.save();
 
-    const subject = 'Sign Up Confermation'
+    const subject = "Sign Up Confermation";
     const content = emailVerification()
-        .replace('userName', name)
-        .replace('VerifyUrl', `http://localhost:3000/api/verify/${userDetail._id}/${token}`);
+        .replace("userName", name)
+        .replace(
+            "VerifyUrl",
+            `http://localhost:3000/api/verify/${userDetail._id}/${token}`,
+        );
 
-    emailSender(email, subject, content)
-    response.status(201).json({ success: true, data: userDetail })
-
-}
+    emailSender(email, subject, content);
+    response.status(201).json({ success: true, data: userDetail });
+};
 
 export const verifyEmailController = async (request, response) => {
     const { ID, token } = request.params;
     const user = await User.findById(ID);
 
-
     if (!user) {
-        throw new customError('User not found', 404);
+        throw new customError("User not found", 404);
     }
     if (user.emailToken !== token) {
-        throw new customError('Invalid Token', 400);
+        throw new customError("Invalid Token", 400);
     }
     user.isVerified = true;
     user.emailToken = undefined;
     await user.save();
 
-    response.status(200).redirect('http://localhost:5173/verifiedstatus');
+    response.status(200).redirect("http://localhost:5173/verifiedstatus");
 };
 
 export const userLoginController = async (request, response) => {
-    const { email, password } = await request.body
+    const { email, password } = await request.body;
 
-    if (!email, !password) {
-        throw new customError('Please fill all the Feild', 400)
+    if ((!email, !password)) {
+        throw new customError("Please fill all the Feild", 400);
     }
 
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email });
 
     if (!user) {
-        throw new customError('User not found', 404)
+        throw new customError("User not found", 404);
     }
 
     if (!user.isVerified) {
-        throw new customError('Please Verify you Email before login', 400)
+        throw new customError("Please Verify you Email before login", 400);
     }
 
-    const passwordMatched = await bcrypt.compare(password, user.password)
+    const passwordMatched = await bcrypt.compare(password, user.password);
 
     if (!passwordMatched) {
-        throw new customError('Wrong password try again', 400)
+        throw new customError("Wrong password try again", 400);
     }
-    response.status(200).json({ message: 'User logged In successfully' })
-}
+    response.status(200).json({ message: "User logged In successfully" });
+};
 
 export const otpController = async (request, response) => {
     const { email } = request.body;
     const userDetails = await User.findOne({ email });
 
     if (!userDetails) {
-        throw new customError('User not found', 404);
+        throw new customError("User not found", 404);
     }
-    const OTP = String(Math.floor(Math.random() * 10000)).padStart(4, '0')
-    userDetails.otp = OTP
+    const OTP = String(Math.floor(Math.random() * 10000)).padStart(4, "0");
+    userDetails.otp = OTP;
 
     await userDetails.save();
 
-    const subject = 'Password Reset OTP'
-    const content = optTemplate(OTP)
+    const subject = "Password Reset OTP";
+    const content = optTemplate(OTP);
 
-    emailSender(email, subject, content)
-
-
-
-
+    emailSender(email, subject, content);
     response.status(200).json("OTP Sent successfully");
+};
+
+
+export const verifyOtpController = async (request, response) => {
+    const { email, otp } = await request.body;
+    const userDetails = await User.findOne({ email });
+    console.log(email)
+    console.log(typeof(otp))
+
+    if (!userDetails) {
+        throw new customError("User not found", 404);
+    }
+    if (userDetails.otp !== otp) {
+        throw new customError('Invalid OTP', 400)
+    }
+    userDetails.otp = undefined
+    await userDetails.save();
+
+    response.status(200).json("OTP verify successfully").redirect(`${process.env.FRONTEND_URL}/password-reset`)
+};
+
+export const passwordResetController = async (request, response) => {
+    const { email, newPassword } = request.body;
+    const userDetails = await User.findOne({ email });
+
+    if (!userDetails) {
+        throw new customError("User not found", 404);
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 16)
+
+    userDetails.password = hashedPassword
+    await userDetails.save();
+
+    response.status(200).json({ message: "Password Changed successfully", redirectUrl: `${process.env.FRONTEND_URL}/userlogin` });
 };
