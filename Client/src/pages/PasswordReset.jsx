@@ -1,17 +1,23 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const PasswordReset = () => {
   const [formData, setFormData] = useState({
     newPassword: "",
     confirmPassword: "",
   });
+
   const [showPassword, setShowPassword] = useState({
     new: false,
     confirm: false,
   });
+
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const navigate = useNavigate()
 
   const validatePassword = (password) => {
     const minLength = password.length >= 8;
@@ -92,6 +98,8 @@ const PasswordReset = () => {
     }
 
     try {
+      setLoading(true);
+      setError("");
       const response = await axios.post(
         "http://localhost:3000/api/password-reset",
         {
@@ -99,10 +107,15 @@ const PasswordReset = () => {
           newPassword,
         },
       );
-      alert("Password reset successful!");
+      setSuccess("Password reset successful!");
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
     } catch (error) {
       console.error(error);
       setError(error.response?.data?.message || "Failed to reset password.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -165,12 +178,14 @@ const PasswordReset = () => {
               </button>
             </div>
           </div>
-          {error && <p className='text-red-500 text-sm'>{error}</p>}
+          {error && <p className='text-red-500 text-sm whitespace-pre-line'>{error}</p>}
+          {success && <p className='text-green-500 text-sm'>{success}</p>}
           <button
             type='submit'
-            className='w-full px-4 py-2 text-white bg-dark-accent rounded-md hover:bg-dark-accent/80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+            disabled={loading}
+            className='w-full px-4 py-2 text-white bg-dark-accent rounded-md hover:bg-dark-accent/80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed'
           >
-            Reset Password
+            {loading ? "Resetting Password..." : "Reset Password"}
           </button>
         </form>
       </div>

@@ -3,11 +3,16 @@ import { router } from './Routes/user.route.js';
 import env from 'dotenv';
 import cors from 'cors'
 import DBconnect from './Database/DBconnect.js';
+import cookieParser from 'cookie-parser';
+
 
 env.config()
 
 const server = express();
 const PORT = process.env.PORT || 3001;
+
+// cookies middleware
+server.use(cookieParser())
 server.use(cors({
     origin: 'http://localhost:5173', // Replace with your frontend's URL
     methods: ['GET', 'POST', 'PUT', 'DELETE'],

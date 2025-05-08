@@ -38,7 +38,6 @@ const EnterOTP = () => {
         return;
       }
       setMail(email);
-      console.log(email);
 
       const res = await axios.post("http://localhost:3000/api/verify-otp", {
         otp,

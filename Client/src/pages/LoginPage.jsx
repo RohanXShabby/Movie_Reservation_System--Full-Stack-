@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
+
 const LoginPage = () => {
+
+  axios.defaults.withCredentials = true
+
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -37,12 +42,13 @@ const LoginPage = () => {
       setLoading(true);
       setError("");
 
-      const res = await axios.post("https://localhost:3000/api/login", {
+      const res = await axios.post("http://localhost:3000/api/userlogin", {
         email,
         password,
       });
 
       setSuccess("Login successful!")
+      navigate("/movies")
     } catch (err) {
       setError(
         err.response?.data?.message || "Login failed. Check credentials.",

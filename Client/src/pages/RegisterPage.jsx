@@ -76,8 +76,8 @@ const RegisterPage = () => {
       });
 
       setSuccess("Registration successful!");
-      navigate("/checkmail");
       setFormData({ name: "", email: "", password: "" });
+      navigate("/checkmail");
     } catch (err) {
       console.log(err);
       const errorMsg = err.response?.data?.message;

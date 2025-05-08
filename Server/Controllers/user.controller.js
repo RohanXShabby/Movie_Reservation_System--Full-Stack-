@@ -6,6 +6,7 @@ import { emailVerification } from "../Templates/mailTemplates.js";
 import { randomBytes } from "crypto";
 import { optTemplate } from "../Templates/otpTemplates.js";
 import env from "dotenv";
+import jwt from 'jsonwebtoken'
 
 env.config();
 
@@ -81,6 +82,17 @@ export const userLoginController = async (request, response) => {
     if (!passwordMatched) {
         throw new customError("Wrong password try again", 400);
     }
+
+    const data = { id: user._id, name: user.name, email: user.email }
+
+    const token = jwt.sign(data, process.env.JWT_SECRET, { expiresIn: "10d" })
+    console.log(token)
+    response.cookie("jwt-token", token, {
+        httpOnly: true,
+        secure: true
+    })
+
+
     response.status(200).json({ message: "User logged In successfully" });
 };
 
@@ -108,7 +120,7 @@ export const verifyOtpController = async (request, response) => {
     const { email, otp } = await request.body;
     const userDetails = await User.findOne({ email });
     console.log(email)
-    console.log(typeof(otp))
+    console.log(typeof (otp))
 
     if (!userDetails) {
         throw new customError("User not found", 404);
@@ -134,5 +146,5 @@ export const passwordResetController = async (request, response) => {
     userDetails.password = hashedPassword
     await userDetails.save();
 
-    response.status(200).json({ message: "Password Changed successfully", redirectUrl: `${process.env.FRONTEND_URL}/userlogin` });
+    response.status(200).json({ message: "Password Changed successfully" });
 };
