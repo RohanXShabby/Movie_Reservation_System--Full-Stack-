@@ -11,7 +11,7 @@ import jwt from 'jsonwebtoken'
 env.config();
 
 export const initialController = async (request, response, next) => {
-    response.status(200).send({ message: "Server Running" });
+    response.status(200).send({ message: "User Authorized", userDetails: request.user });
 };
 
 export const registerController = async (request, response, next) => {
@@ -86,10 +86,12 @@ export const userLoginController = async (request, response) => {
     const data = { id: user._id, name: user.name, email: user.email }
 
     const token = jwt.sign(data, process.env.JWT_SECRET, { expiresIn: "10d" })
+
     console.log(token)
-    response.cookie("jwt-token", token, {
+
+    response.cookie("jwttoken", token, {
         httpOnly: true,
-        secure: true
+        secure: false
     })
 
 
@@ -119,8 +121,6 @@ export const otpController = async (request, response) => {
 export const verifyOtpController = async (request, response) => {
     const { email, otp } = await request.body;
     const userDetails = await User.findOne({ email });
-    console.log(email)
-    console.log(typeof (otp))
 
     if (!userDetails) {
         throw new customError("User not found", 404);

@@ -13,11 +13,13 @@ const PORT = process.env.PORT || 3001;
 
 // cookies middleware
 server.use(cookieParser())
+
+//cors Policy
 server.use(cors({
-    origin: 'http://localhost:5173', // Replace with your frontend's URL
+    origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true // Allow cookies if needed
+    credentials: true
 }))
 server.use(express.json());
 
