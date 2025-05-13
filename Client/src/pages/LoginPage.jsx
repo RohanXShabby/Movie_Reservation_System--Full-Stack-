@@ -40,15 +40,21 @@ const LoginPage = () => {
 
     try {
       setLoading(true);
-      setError("");
-
-      const res = await axios.post("http://localhost:3000/api/userlogin", {
+      setError(""); const res = await axios.post("http://localhost:3000/api/userlogin", {
         email,
         password,
       });
 
+      const token = res.data.token;
+
+      // Set the token in axios defaults for future requests
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+      // Store token in localStorage
+      localStorage.setItem('token', token);
+
       setSuccess("Login successful!")
-      navigate("/movies")
+      navigate("/account")
     } catch (err) {
       setError(
         err.response?.data?.message || "Login failed. Check credentials.",

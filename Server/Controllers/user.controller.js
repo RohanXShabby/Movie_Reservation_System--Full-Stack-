@@ -31,7 +31,7 @@ export const registerController = async (request, response, next) => {
 
     await userDetail.save();
 
-    const subject = "Sign Up Confermation";
+    const subject = "Sign Up Confirmation";
     const content = emailVerification()
         .replace("userName", name)
         .replace(
@@ -87,15 +87,19 @@ export const userLoginController = async (request, response) => {
 
     const token = jwt.sign(data, process.env.JWT_SECRET, { expiresIn: "10d" })
 
-    console.log(token)
+    // console.log(token)
 
-    response.cookie("jwttoken", token, {
-        httpOnly: true,
-        secure: false
-    })
+    // response.cookie("jwttoken", token, {     //setting token in cookie
+    //     httpOnly: true,
+    //     secure: false
+    // })    // Set the token in the Authorization header
+    response.set('Authorization', `Bearer ${token}`);
 
-
-    response.status(200).json({ message: "User logged In successfully" });
+    // Send the token in the response body as well
+    response.status(200).json({
+        message: "User logged In successfully",
+        token: token
+    });
 };
 
 export const otpController = async (request, response) => {

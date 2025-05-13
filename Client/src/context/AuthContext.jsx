@@ -6,13 +6,23 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [userName, setUserName] = useState('');
-
-    // Configure axios to include credentials
+    const [userName, setUserName] = useState('');    // Configure axios defaults
     axios.defaults.withCredentials = true;
 
     const Auth = async () => {
         try {
+            // Get token from localStorage
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                setIsLoggedIn(false);
+                setUserName('');
+                return;
+            }
+
+            // Set the authorization header
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
             const res = await axios.get('http://localhost:3000/api/');
             if (res.status === 200 && res.data.userDetails) {
                 setUserName(res.data.userDetails.name);
@@ -20,11 +30,13 @@ export const AuthProvider = ({ children }) => {
             } else {
                 setUserName('');
                 setIsLoggedIn(false);
+                localStorage.removeItem('token');
             }
         } catch (error) {
             console.error('Auth Error:', error);
             setIsLoggedIn(false);
             setUserName('');
+            localStorage.removeItem('token');
         }
     };
 

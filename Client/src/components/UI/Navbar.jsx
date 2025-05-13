@@ -5,6 +5,7 @@ import { useAuth } from "../../context/AuthContext.jsx";
 
 const Navbar = () => {
   const { isLoggedIn, userName } = useAuth();
+  console.log(isLoggedIn)
 
   const navlinks = [
     { path: "/", name: "Home" },
