@@ -81,24 +81,22 @@ export const userLoginController = async (request, response) => {
 
     if (!passwordMatched) {
         throw new customError("Wrong password try again", 400);
-    }
-
-    const data = { id: user._id, name: user.name, email: user.email }
+    } const data = { id: user._id, name: user.name, email: user.email }
 
     const token = jwt.sign(data, process.env.JWT_SECRET, { expiresIn: "10d" })
 
-    // console.log(token)
-
-    // response.cookie("jwttoken", token, {     //setting token in cookie
-    //     httpOnly: true,
-    //     secure: false
-    // })    // Set the token in the Authorization header
+    // Set the Authorization header with Bearer token
+    response.set('Access-Control-Expose-Headers', 'Authorization');
     response.set('Authorization', `Bearer ${token}`);
 
     // Send the token in the response body as well
     response.status(200).json({
         message: "User logged In successfully",
-        token: token
+        token: token,
+        user: {
+            name: user.name,
+            email: user.email
+        }
     });
 };
 

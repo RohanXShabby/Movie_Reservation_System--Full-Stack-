@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-
+import axiosInstance from "../Services/axiosInstance";
+import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
-
-  axios.defaults.withCredentials = true
+  const { refreshAuth } = useAuth();
 
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
@@ -28,7 +27,6 @@ const LoginPage = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { email, password } = formData;
@@ -36,28 +34,32 @@ const LoginPage = () => {
     if (!email || !password) {
       setError("Please fill in all fields.");
       return;
-    }
-
-    try {
+    } try {
       setLoading(true);
-      setError(""); const res = await axios.post("http://localhost:3000/api/userlogin", {
-        email,
-        password,
+      setError("");
+
+      const response = await axiosInstance.post("/userlogin", {
+        email: formData.email,
+        password: formData.password
       });
 
-      const token = res.data.token;
+      console.log('Login response:', response.data); // Debug log
 
-      // Set the token in axios defaults for future requests
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      if (response.data && response.data.token) {
+        const token = response.data.token;
+        localStorage.setItem('token', token);
+        axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-      // Store token in localStorage
-      localStorage.setItem('token', token);
-
-      setSuccess("Login successful!")
-      navigate("/account")
+        setSuccess("Login successful!");
+        await refreshAuth(); // Refresh auth context
+        navigate("/account");
+      } else {
+        throw new Error('No token received from server');
+      }
     } catch (err) {
+      console.error('Login error:', err); // Debug log
       setError(
-        err.response?.data?.message || "Login failed. Check credentials.",
+        err.response?.data?.message || "Login failed. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -94,6 +96,7 @@ const LoginPage = () => {
                 name='password'
                 value={formData.password}
                 onChange={handleChange}
+                autoComplete="on"
                 placeholder='Enter your password'
                 className='w-full px-4 py-2 rounded-lg bg-dark-primary text-dark-text border border-dark-accent focus:outline-none focus:ring-2 focus:ring-dark-accent'
               />

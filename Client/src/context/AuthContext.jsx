@@ -1,29 +1,26 @@
 // context/AuthContext.js
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from 'axios';
+import axiosInstance from "../Services/axiosInstance";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [userName, setUserName] = useState('');    // Configure axios defaults
-    axios.defaults.withCredentials = true;
+    const [isLoggedIn, setIsLoggedIn] = useState(() => {
+        return !!localStorage.getItem('token')
+    });
+    const [userName, setUserName] = useState('');
 
     const Auth = async () => {
         try {
-            // Get token from localStorage
             const token = localStorage.getItem('token');
-
             if (!token) {
                 setIsLoggedIn(false);
                 setUserName('');
                 return;
             }
 
-            // Set the authorization header
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-            const res = await axios.get('http://localhost:3000/api/');
+            const res = await axiosInstance.get('/');
             if (res.status === 200 && res.data.userDetails) {
                 setUserName(res.data.userDetails.name);
                 setIsLoggedIn(true);
@@ -38,6 +35,13 @@ export const AuthProvider = ({ children }) => {
             setUserName('');
             localStorage.removeItem('token');
         }
+    };
+
+    const logout = () => {
+        localStorage.removeItem('token');
+        delete axios.defaults.headers.common['Authorization'];
+        setIsLoggedIn(false);
+        setUserName('');
     };
 
     // Check auth status periodically and on focus
@@ -63,7 +67,8 @@ export const AuthProvider = ({ children }) => {
         <AuthContext.Provider value={{
             isLoggedIn,
             userName,
-            refreshAuth: Auth
+            refreshAuth: Auth,
+            logout
         }}>
             {children}
         </AuthContext.Provider>

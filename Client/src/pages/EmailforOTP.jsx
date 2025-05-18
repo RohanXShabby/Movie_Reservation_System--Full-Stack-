@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import axiosInstance from "../Services/axiosInstance";
 import { useNavigate } from "react-router-dom";
 
 const EmailforOTP = () => {
@@ -31,7 +32,7 @@ const EmailforOTP = () => {
       setLoading(true);
       setError("");
 
-      const res = await axios.post("http://localhost:3000/api/otp", {
+      const res = await axiosInstance.post("/otp", {
         email: email.email,
       });
       sessionStorage.setItem("email", email.email);
