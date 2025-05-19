@@ -1,8 +1,7 @@
 import { Router } from 'express'
-import movieModel from '../Models/addMovieModel.js'
 import { addMovieController } from '../Controllers/admin.controller.js'
-import { asyncHandler } from '../Utils/asyncHandler'
+import { asyncHandler } from '../Utils/asyncHandler.js'
 
-const adminRoute = Router()
+export const adminRouter = Router()
 
-adminRoute.post('/add-movie', asyncHandler(addMovieController))
+adminRouter.post('/add-movie', asyncHandler(addMovieController))

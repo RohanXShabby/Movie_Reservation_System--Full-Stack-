@@ -1,5 +1,6 @@
 import express from 'express'
 import { router } from './Routes/user.route.js';
+import { adminRouter } from './Routes/admin.routes.js';
 import env from 'dotenv';
 import cors from 'cors'
 import DBconnect from './Database/DBconnect.js';
@@ -36,6 +37,7 @@ server.use(express.json());
 
 
 server.use('/api', router)
+server.use('/api', adminRouter)
 
 server.use((error, request, response, next) => {
     response
