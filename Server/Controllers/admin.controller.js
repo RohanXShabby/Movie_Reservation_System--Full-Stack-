@@ -22,3 +22,11 @@ export const addMovieController = async (request, response, next) => {
     await newMovie.save()
     response.send({ success: true, message: 'Movie Added Successfully' })
 }
+export const addPosterController = async (request, response, next, error) => {
+    if (!request.file) {
+        response.status(400).json({ success: false, message: "Can't get Image" })
+        next(error.message)
+    }
+    console.log(request.file)
+    response.status(200).json({ success: true, message: "Image Upload Successfully" })
+}
