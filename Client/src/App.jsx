@@ -13,6 +13,7 @@ import VerifiedSuccess from "./components/UI/VerifiedSuccess.jsx";
 import EmailforOTP from "./pages/EmailforOTP.jsx";
 import EnterOTP from "./pages/EnterOTP.jsx";
 import PasswordReset from "./pages/PasswordReset.jsx";
+import AdminPanel from "./pages/AdminPanel.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -26,6 +27,7 @@ function App() {
         { path: "/movies", element: <MoviesPage /> },
         { path: "/tickets", element: <TicketPage /> },
         { path: "/tickets", element: <TicketPage /> },
+        { path: "/admin", element: <AdminPanel /> },
       ],
     },
     { path: "/checkmail", element: <CheckYourEmail /> },

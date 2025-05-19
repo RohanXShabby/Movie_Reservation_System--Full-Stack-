@@ -6,7 +6,6 @@ env.config()
 export const authCheck = async (request, response, next) => {
     try {
         // const jwtToken = request.cookies.jwttoken
-        console.log(request.headers)
         const jwtToken = request.headers.authorization?.split(' ')[1]
 
         if (!jwtToken) {
