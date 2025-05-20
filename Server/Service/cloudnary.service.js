@@ -22,7 +22,7 @@ export const storage = new CloudinaryStorage({
             const posterExtention = file.mimetype.split('/')[1]
             if (validFileExtention.includes(posterExtention)) {
                 return 'webp'
-            }
+            } 
             throw new Error('Unsupported File Type')
         },
         public_id: (req, file) => {
