@@ -52,13 +52,13 @@ const AdminPanel = () => {
     const [movies, setMovies] = useState([]);
     const [movieForm, setMovieForm] = useState({
         title: '',
-        genre: '',
-        language: '',
+        genre: [],
+        language: [],
         duration: '',
         releaseDate: '',
         description: '',
         posterUrl: '',
-        trailerUrl: '',
+        trailerUrl: [],
         rating: '',
         cast: [],
         director: '',
@@ -72,7 +72,9 @@ const AdminPanel = () => {
         const { name, value } = e.target;
         setMovieForm((prev) => ({
             ...prev,
-            [name]: name === 'cast' ? value.split(',') : value,
+            [name]: ['cast', 'genre', 'language', 'trailerUrl'].includes(name)
+                ? value.split(',')
+                : value
         }));
     };
 
@@ -82,20 +84,21 @@ const AdminPanel = () => {
         setError('');
         setSuccess(false);
         try {
-            await axiosInstance.post('/admin/movies', movieForm);
+            await axiosInstance.post('/add-movie', movieForm);
             setMovieForm({
                 title: '',
-                genre: '',
-                language: '',
+                genre: [],
+                language: [],
                 duration: '',
                 releaseDate: '',
                 description: '',
                 posterUrl: '',
-                trailerUrl: '',
+                trailerUrl: [],
                 rating: '',
                 cast: [],
                 director: '',
             });
+            setActiveTab('manageMovies')
             setSuccess(true);
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to add movie');
@@ -148,7 +151,8 @@ const AdminPanel = () => {
                         <span>Reports</span>
                     </button>
                 </nav>
-            </aside>            <main className="flex-1 p-6">
+            </aside>
+            <main className="flex-1 p-6">
                 <div className="max-w-4xl mx-auto bg-dark-secondary rounded-lg p-6 shadow-lg">
                     {activeTab === 'manageMovies' && <ManageMovies movies={movies} />}
                     {activeTab === 'users' && <Users />}
@@ -165,12 +169,12 @@ const AdminPanel = () => {
                                         <input type="text" name="title" value={movieForm.title} onChange={handleMovieFormChange} className="w-full bg-dark-primary p-2 rounded border border-gray-600" required />
                                     </div>
                                     <div>
-                                        <label className="block mb-1">Genre</label>
-                                        <input type="text" name="genre" value={movieForm.genre} onChange={handleMovieFormChange} className="w-full bg-dark-primary p-2 rounded border border-gray-600" required />
+                                        <label className="block mb-1">Genre (comma separated)</label>
+                                        <input type="text" name="genre" value={movieForm.genre.join(',')} onChange={handleMovieFormChange} className="w-full bg-dark-primary p-2 rounded border border-gray-600" required />
                                     </div>
                                     <div>
-                                        <label className="block mb-1">Language</label>
-                                        <input type="text" name="language" value={movieForm.language} onChange={handleMovieFormChange} className="w-full bg-dark-primary p-2 rounded border border-gray-600" required />
+                                        <label className="block mb-1">Language (comma separated)</label>
+                                        <input type="text" name="language" value={movieForm.language.join(',')} onChange={handleMovieFormChange} className="w-full bg-dark-primary p-2 rounded border border-gray-600" required />
                                     </div>
                                     <div>
                                         <label className="block mb-1">Duration (minutes)</label>
@@ -211,8 +215,8 @@ const AdminPanel = () => {
                                         <input type="url" name="posterUrl" value={movieForm.posterUrl} onChange={handleMovieFormChange} className="w-full bg-dark-primary p-2 rounded border border-gray-600" />
                                     </div>
                                     <div>
-                                        <label className="block mb-1">Trailer URL</label>
-                                        <input type="url" name="trailerUrl" value={movieForm.trailerUrl} onChange={handleMovieFormChange} className="w-full bg-dark-primary p-2 rounded border border-gray-600" />
+                                        <label className="block mb-1">Trailer URL (comma separated)</label>
+                                        <input type="url" name="trailerUrl" value={movieForm.trailerUrl.join(',')} onChange={handleMovieFormChange} className="w-full bg-dark-primary p-2 rounded border border-gray-600" />
                                     </div>
                                 </div>
                                 <div>

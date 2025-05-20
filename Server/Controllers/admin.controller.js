@@ -6,7 +6,7 @@ export const addMovieController = async (request, response, next) => {
 
 
     const requiredFields = [
-        "movieName", "genre", "language", "duration", "releaseDate",
+        "title", "genre", "language", "duration", "releaseDate",
         "rating", "cast", "director", "posterUrl", "trailerUrl", "description"
     ];
     const missingFields = requiredFields.filter(field => !movieDetails[field]);
