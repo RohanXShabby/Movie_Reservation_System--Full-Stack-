@@ -20,7 +20,7 @@ const AccountPage = () => {
     const [bookingHistory] = useState([
         {
             id: 1,
-            movieName: 'Inception',
+            title: 'Inception',
             date: '2024-05-15',
             time: '18:30',
             seats: ['A1', 'A2'],

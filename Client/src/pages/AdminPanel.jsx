@@ -50,6 +50,7 @@ const Reports = () => {
 const AdminPanel = () => {
     const [activeTab, setActiveTab] = useState('addMovie');
     const [movies, setMovies] = useState([]);
+    const [moviePoster, setMoviePoster] = useState(``)
     const [movieForm, setMovieForm] = useState({
         title: '',
         genre: [],
@@ -84,7 +85,18 @@ const AdminPanel = () => {
         setError('');
         setSuccess(false);
         try {
-            await axiosInstance.post('/add-movie', movieForm);
+            const posterData = new FormData();
+            posterData.append('image', moviePoster);
+            const posterRes = await axiosInstance.post('/add-poster', posterData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            }); console.log(posterRes?.data?.url)
+            const updatedMovieForm = {
+                ...movieForm,
+                posterUrl: posterRes?.data?.url,
+            };
+            await axiosInstance.post('/add-movie', updatedMovieForm);
             setMovieForm({
                 title: '',
                 genre: [],
@@ -211,12 +223,12 @@ const AdminPanel = () => {
                                         <input type="text" name="director" value={movieForm.director} onChange={handleMovieFormChange} className="w-full bg-dark-primary p-2 rounded border border-gray-600" />
                                     </div>
                                     <div>
-                                        <label className="block mb-1">Poster URL</label>
-                                        <input type="url" name="posterUrl" value={movieForm.posterUrl} onChange={handleMovieFormChange} className="w-full bg-dark-primary p-2 rounded border border-gray-600" />
+                                        <label className="block mb-1">Poster</label>
+                                        <input type="file" name="image" onChange={e => setMoviePoster(e.target.files[0])} className="w-full bg-dark-primary p-2 rounded border border-gray-600" />
                                     </div>
                                     <div>
                                         <label className="block mb-1">Trailer URL (comma separated)</label>
-                                        <input type="url" name="trailerUrl" value={movieForm.trailerUrl.join(',')} onChange={handleMovieFormChange} className="w-full bg-dark-primary p-2 rounded border border-gray-600" />
+                                        <input type="url" name="trailerUrl" onChange={handleMovieFormChange} className="w-full bg-dark-primary p-2 rounded border border-gray-600" />
                                     </div>
                                 </div>
                                 <div>
