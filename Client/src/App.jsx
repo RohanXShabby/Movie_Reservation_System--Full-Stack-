@@ -26,7 +26,7 @@ function App() {
         { path: "/", element: <HomePage /> },
         { path: "/account", element: <AccountPage /> },
         { path: "/movies", element: <MoviesPage /> },
-        { path: "/movies:id", element: <MoviesBookingPage /> },
+        { path: "/movies/:id", element: <MoviesBookingPage /> },
         { path: "/tickets", element: <TicketPage /> },
         { path: "/tickets", element: <TicketPage /> },
         { path: "/admin", element: <AdminPanel /> },

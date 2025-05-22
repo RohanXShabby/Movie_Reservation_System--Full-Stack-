@@ -1,9 +1,8 @@
-import React from 'react'
-
-const MoviesBookingPage = () => {
+const MoviesBookingPage = ({ params }) => {
+    console.log(params)
     return (
         <div>
-
+            Movie booking done here
         </div>
     )
 }

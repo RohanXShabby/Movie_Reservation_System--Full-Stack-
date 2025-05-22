@@ -21,10 +21,11 @@ const HomePage = () => {
 
     return (
         <div>
-            <div className="grid grid-cols-4 gap-8 py-12 px-24">
+            <div className="grid grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-8 py-12 px-20">
                 {movies && movies.map((node) => {
-                    return <Link key={node._id}>
-                        <MovieCard posterUrl={node.posterUrl} title={node.title} description={node.description} genre={node.genre} /></Link>
+                    return <Link to={`movies/${node._id}`} key={node._id}>
+                        <MovieCard posterUrl={node.posterUrl} title={node.title} description={node.description} genre={node.genre} />
+                    </Link>
                 })}
             </div>
         </div>
