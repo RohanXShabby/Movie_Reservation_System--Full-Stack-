@@ -14,6 +14,7 @@ import EmailforOTP from "./pages/EmailforOTP.jsx";
 import EnterOTP from "./pages/EnterOTP.jsx";
 import PasswordReset from "./pages/PasswordReset.jsx";
 import AdminPanel from "./pages/AdminPanel.jsx";
+import MoviesBookingPage from "./pages/MoviesBookingPage.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -25,6 +26,7 @@ function App() {
         { path: "/", element: <HomePage /> },
         { path: "/account", element: <AccountPage /> },
         { path: "/movies", element: <MoviesPage /> },
+        { path: "/movies:id", element: <MoviesBookingPage /> },
         { path: "/tickets", element: <TicketPage /> },
         { path: "/tickets", element: <TicketPage /> },
         { path: "/admin", element: <AdminPanel /> },
