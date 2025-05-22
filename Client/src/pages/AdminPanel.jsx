@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axiosInstance from '../Services/axiosInstance';
 import { FaFilm, FaUsers, FaChartBar, FaPlus } from 'react-icons/fa';
+import { ToastContainer, toast } from 'react-toastify';
 
 const ManageMovies = ({ movies }) => {
     return (
@@ -112,13 +113,22 @@ const AdminPanel = () => {
             });
             setActiveTab('manageMovies')
             setSuccess(true);
+            (() => toast.success("Movie Added SuccessFully!", {
+                theme: "dark",
+                pauseOnHover: false,
+            }))()
+
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to add movie');
         } finally {
             setLoading(false);
         }
-    }; return (
+    };
+    return (
         <div className="flex min-h-screen bg-dark-primary text-dark-text">
+            <div>
+                <ToastContainer position="top-right" />
+            </div>
             <aside className="w-64 bg-dark-secondary p-6">
                 <h2 className="text-xl font-bold mb-6">Admin Dashboard</h2>
                 <nav className="space-y-4">
