@@ -1,11 +1,13 @@
 const MovieCard = ({ posterUrl, title, description, genre }) => {
     return (
-        <div className='border border-dark-secondary flex flex-col items-center justify-center py-4 rounded-2xl text-dark-text'>
-            <div className='w-full flex flex-col gap-4 p-3 aspect-[9/16]'>
-                <img className='w-full h-[80%] object-cover object-center' src={posterUrl} alt={title} />
+        <div className='border border-dark-secondary flex flex-col justify-center py-4 rounded-2xl h-full items-center text-dark-text'>
+            <div className=' flex flex-col gap-4 p-3 h-full'>
+                <div className="h-[80%]">
+                    <img className='w-full h-full object-cover object-center' src={posterUrl} alt={title} />
+                </div>
                 <div className='flex flex-col gap-2 h-[20%]'>
                     <div className='flex flex-col gap-1'>
-                        <div className='font-semibold text-2xl'>
+                        <div className='font-semibold text-2xl whitespace-nowrap'>
                             {title}
                         </div>
                         <div className='text-dark-text/60'>
