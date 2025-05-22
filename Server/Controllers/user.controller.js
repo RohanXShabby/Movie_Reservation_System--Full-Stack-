@@ -7,6 +7,8 @@ import { randomBytes } from "crypto";
 import { optTemplate } from "../Templates/otpTemplates.js";
 import env from "dotenv";
 import jwt from 'jsonwebtoken'
+import { movieModel } from '../Models/addMovieModel.js'
+import { response } from "express";
 
 env.config();
 
@@ -150,3 +152,11 @@ export const passwordResetController = async (request, response) => {
 
     response.status(200).json({ message: "Password Changed successfully" });
 };
+
+export const getAllMovieController = async (request, response, next) => {
+    const movies = await movieModel.find()
+    if (!movies) {
+        throw new customError('Can,t Get Movies', 404)
+    }
+    response.status(200).json({ message: "Movie fetched Successfully", movies })
+}

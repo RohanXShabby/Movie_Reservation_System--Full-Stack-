@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { initialController, registerController, verifyEmailController, userLoginController, otpController, passwordResetController, verifyOtpController } from "../Controllers/user.controller.js";
+import { initialController, registerController, verifyEmailController, userLoginController, otpController, passwordResetController, verifyOtpController, getAllMovieController } from "../Controllers/user.controller.js";
 import { asyncHandler } from "../Utils/asyncHandler.js";
 import { authCheck } from "../Middleware/auth.middleware.js";
 
@@ -23,3 +23,5 @@ router.post('/verify-otp', asyncHandler(verifyOtpController))
 router.post('/password-reset', asyncHandler(passwordResetController))
 
 router.post('/userlogin', asyncHandler(userLoginController))
+
+router.get('/get-movies', asyncHandler(getAllMovieController))
