@@ -47,7 +47,7 @@ const AccountPage = () => {
                             <div className="space-y-3">
                                 <div>
                                     <label className="text-gray-400">Name</label>
-                                    <p className="text-lg">{userDetails.name}</p>
+                                    <p className="text-lg">{userName}</p>
                                 </div>
                                 <div>
                                     <label className="text-gray-400">Email</label>
