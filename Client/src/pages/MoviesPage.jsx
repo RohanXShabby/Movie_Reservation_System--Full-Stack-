@@ -1,9 +1,10 @@
-import React from 'react'
+
+import MovieContainer from '../components/UI/MovieContainer'
 
 const MoviesPage = () => {
     return (
         <div>
-            Movie Page
+            <MovieContainer />
         </div>
     )
 }

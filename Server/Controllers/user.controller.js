@@ -8,7 +8,6 @@ import { optTemplate } from "../Templates/otpTemplates.js";
 import env from "dotenv";
 import jwt from 'jsonwebtoken'
 import { movieModel } from '../Models/addMovieModel.js'
-import { response } from "express";
 
 env.config();
 
@@ -159,4 +158,11 @@ export const getAllMovieController = async (request, response, next) => {
         throw new customError('Can,t Get Movies', 404)
     }
     response.status(200).json({ message: "Movie fetched Successfully", movies })
+}
+
+export const getSingleMovieController = async (request, response) => {
+    const { id } = request.params
+
+    response.status(200).json({ message: "success", id })
+
 }
