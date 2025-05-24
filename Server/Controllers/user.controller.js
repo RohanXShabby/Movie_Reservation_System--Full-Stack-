@@ -162,7 +162,11 @@ export const getAllMovieController = async (request, response, next) => {
 
 export const getSingleMovieController = async (request, response) => {
     const { id } = request.params
+    const movieDetails = await movieModel.findById(id);
+    if (!movieDetails) {
+        throw new customError('Movie not found', 404);
+    }
 
-    response.status(200).json({ message: "success", id })
+    response.status(200).json({ message: "success", data: movieDetails })
 
 }
